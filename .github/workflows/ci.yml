@@ -1,0 +1,32 @@
+name: Pricing validation
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e '.[dev]'
+      - run: python -m pytest -q
+      - run: fx-rates-lab --output results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pricing-report-${{ matrix.python }}
+          path: results/
+      - name: Build delivery image
+        run: docker build -t fx-rates-lab:ci .
+      - name: Smoke-test container
+        run: docker run --rm fx-rates-lab:ci --output /app/results
+      - name: Export delivery image
+        run: docker save fx-rates-lab:ci | gzip > fx-rates-lab-image.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: delivery-image-${{ matrix.python }}
+          path: fx-rates-lab-image.tar.gz

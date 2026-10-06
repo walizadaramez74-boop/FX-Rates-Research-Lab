@@ -1,0 +1,6 @@
+{
+  "label": "Synthetic educational quotes; not current market data",
+  "spot_usd_per_eur": 1.1,
+  "USD": {"deposits": [[0.25, 0.045], [0.5, 0.044], [1, 0.042]], "swaps": [[2, 0.041], [3, 0.04], [5, 0.039], [10, 0.038]]},
+  "EUR": {"deposits": [[0.25, 0.03], [0.5, 0.029], [1, 0.028]], "swaps": [[2, 0.027], [3, 0.026], [5, 0.025], [10, 0.024]]}
+}
